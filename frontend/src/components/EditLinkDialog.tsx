@@ -129,7 +129,6 @@ export default function EditLinkDialog({ open, onClose, onSubmit, link }: EditLi
 						variant="standard"
 					/>
 					<TextField
-						autoFocus
 						margin="dense"
 						label="URL"
 						error={urlError}
@@ -143,7 +142,6 @@ export default function EditLinkDialog({ open, onClose, onSubmit, link }: EditLi
 						variant="standard"
 					/>
 					<TextField
-						autoFocus
 						margin="dense"
 						label="Description"
 						error={descriptionError}

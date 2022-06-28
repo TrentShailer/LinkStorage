@@ -110,7 +110,6 @@ export default function CreateLinkDialog({ open, onClose, onSubmit }: CreateLink
 						variant="standard"
 					/>
 					<TextField
-						autoFocus
 						margin="dense"
 						label="URL"
 						error={urlError}
@@ -124,7 +123,6 @@ export default function CreateLinkDialog({ open, onClose, onSubmit }: CreateLink
 						variant="standard"
 					/>
 					<TextField
-						autoFocus
 						margin="dense"
 						label="Description"
 						error={descriptionError}
