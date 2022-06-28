@@ -58,7 +58,7 @@ export const protectedResources = {
 		endpoints: {
 			query: FormQueryString,
 			param: FromParamString,
-			default: "http://localhost:2006/link",
+			default: "https://links.trentshailer.com/link",
 		},
 		scopes: ["api://0660c545-35d9-4897-8afe-79dd63c16fd6/access_as_user"],
 	},
