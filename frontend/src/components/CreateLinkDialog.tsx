@@ -9,7 +9,7 @@ import {
 	TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { BookmarkBorder, Bookmark } from "@mui/icons-material";
+import { StarOutline, Star } from "@mui/icons-material";
 
 type CreateLinkDialogProps = {
 	open: boolean;
@@ -143,17 +143,21 @@ export default function CreateLinkDialog({ open, onClose, onSubmit }: CreateLink
 									setFavourite(event.target.checked);
 								}}
 								checked={favourite}
-								icon={<BookmarkBorder />}
-								checkedIcon={<Bookmark />}
 							/>
 						}
-						label="Bookmarked"
+						label="Favourite"
 					/>
 				</DialogContent>
 				<DialogActions>
-					<Button onClick={handleClose}>Cancel</Button>
-					<Button disabled={invalid} onClick={handleSubmit}>
-						Create Link
+					<Button onClick={handleClose} style={{ marginRight: 20 }}>
+						Cancel
+					</Button>
+					<Button
+						disabled={invalid}
+						onClick={handleSubmit}
+						variant="contained"
+						color="success">
+						Save
 					</Button>
 				</DialogActions>
 			</Dialog>

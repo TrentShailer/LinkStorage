@@ -11,14 +11,13 @@ import {
 	Snackbar,
 	Typography,
 } from "@mui/material";
-import { BookmarkBorder, Bookmark, Edit, Delete, MoreVert, ContentCopy } from "@mui/icons-material";
+import { StarOutline, Star, Edit, Delete, MoreVert, ContentCopy } from "@mui/icons-material";
 import React, { useState } from "react";
 import { Link } from "../utils/types";
 import { VAlign } from "./VAlign";
 import { AllAlign } from "./AllAlign";
-import { useAccount, useMsal } from "@azure/msal-react";
-import { protectedResources } from "../authConfig";
-import { CallAPI, DELETE, PATCH } from "../fetch";
+import axios from "axios";
+import { useSnackbar } from "notistack";
 
 type LinkItemProps = {
 	link: Link;
@@ -31,28 +30,51 @@ export default function LinkItem({ link, ManualRefresh, StartEditingLink }: Link
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [showSuccess, setShowSuccess] = useState(false);
 	const [showError, setShowError] = useState(false);
-	const { instance, accounts, inProgress } = useMsal();
-	const account = useAccount(accounts[0] || {});
 
-	const handleFavouriteChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const { enqueueSnackbar } = useSnackbar();
+
+	const handleFavouriteChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		setFavourited(event.target.checked);
-		CallAPI(
-			account,
-			inProgress,
-			instance,
-			async (accessToken: string) => {
-				return await PATCH(
-					accessToken,
-					protectedResources.apiLinks.endpoints.param(link.link_id),
-					{
-						favourite: event.target.checked,
-					}
-				);
-			},
-			(response: any) => {
-				ManualRefresh();
+		try {
+			await axios.patch(`/link/${link.link_id}`, { favourite: event.target.checked });
+			ManualRefresh();
+		} catch (error) {
+			if (axios.isAxiosError(error)) {
+				switch (error.response?.status) {
+					case 401:
+						try {
+							await axios.delete("/session");
+							window.location.href = "/signin";
+							enqueueSnackbar("You need to sign in", { variant: "info" });
+						} catch (error) {
+							console.log(error);
+							enqueueSnackbar(
+								"Something went wrong when trying to sign you out, try clearing your cookies.",
+								{ variant: "error" }
+							);
+						}
+						break;
+					case 403:
+						enqueueSnackbar(
+							"You can't edit this link; it belongs to a different account",
+							{ variant: "error" }
+						);
+						break;
+					case 404:
+						enqueueSnackbar("This link does not exist", { variant: "error" });
+						break;
+					default:
+						enqueueSnackbar(
+							`The server failed to edit your link, contact an admin with the code ${error.response?.status}-4`,
+							{ variant: "error" }
+						);
+						break;
+				}
+			} else {
+				console.log(error);
+				enqueueSnackbar("Something went wrong!", { variant: "error" });
 			}
-		);
+		}
 	};
 
 	const open = Boolean(anchorEl);
@@ -81,21 +103,47 @@ export default function LinkItem({ link, ManualRefresh, StartEditingLink }: Link
 		closeMenu();
 	};
 
-	const handleDelete = () => {
-		CallAPI(
-			account,
-			inProgress,
-			instance,
-			async (accessToken: string) => {
-				return await DELETE(
-					accessToken,
-					protectedResources.apiLinks.endpoints.param(link.link_id)
-				);
-			},
-			(response: any) => {
-				ManualRefresh();
+	const handleDelete = async () => {
+		try {
+			await axios.delete(`/link/${link.link_id}`);
+			ManualRefresh();
+		} catch (error) {
+			if (axios.isAxiosError(error)) {
+				switch (error.response?.status) {
+					case 401:
+						try {
+							await axios.delete("/session");
+							window.location.href = "/signin";
+							enqueueSnackbar("You need to sign in", { variant: "info" });
+						} catch (error) {
+							console.log(error);
+							enqueueSnackbar(
+								"Something went wrong when trying to sign you out, try clearing your cookies.",
+								{ variant: "error" }
+							);
+						}
+						break;
+					case 403:
+						enqueueSnackbar(
+							"You can't edit this link; it belongs to a different account",
+							{ variant: "error" }
+						);
+						break;
+					case 404:
+						enqueueSnackbar("This link does not exist", { variant: "error" });
+						break;
+					default:
+						enqueueSnackbar(
+							`The server failed to edit your link, contact an admin with the code ${error.response?.status}-4`,
+							{ variant: "error" }
+						);
+						break;
+				}
+			} else {
+				console.log(error);
+				enqueueSnackbar("Something went wrong!", { variant: "error" });
 			}
-		);
+		}
 
 		closeMenu();
 	};
@@ -166,8 +214,8 @@ export default function LinkItem({ link, ManualRefresh, StartEditingLink }: Link
 						<Checkbox
 							onChange={handleFavouriteChange}
 							checked={favourited}
-							icon={<BookmarkBorder />}
-							checkedIcon={<Bookmark />}
+							icon={<StarOutline />}
+							checkedIcon={<Star />}
 						/>
 						<IconButton id="basic-button" onClick={openMenu}>
 							<MoreVert />

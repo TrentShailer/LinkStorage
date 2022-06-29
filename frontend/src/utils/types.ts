@@ -7,4 +7,13 @@ type Link = {
 };
 
 type NewLink = { title: string; description: string | null; url: string; favourite: boolean };
-export type { Link, NewLink };
+
+type UserData = {
+	name: string;
+};
+
+type AccountContext = {
+	authenticated: boolean;
+	userData: UserData | null;
+};
+export type { Link, NewLink, UserData, AccountContext };

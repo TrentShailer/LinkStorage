@@ -9,7 +9,7 @@ import {
 	TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { BookmarkBorder, Bookmark } from "@mui/icons-material";
+import { StarOutline, Star } from "@mui/icons-material";
 import { Link } from "../utils/types";
 
 type EditLinkDialogProps = {
@@ -162,17 +162,21 @@ export default function EditLinkDialog({ open, onClose, onSubmit, link }: EditLi
 									setFavourite(event.target.checked);
 								}}
 								checked={favourite}
-								icon={<BookmarkBorder />}
-								checkedIcon={<Bookmark />}
 							/>
 						}
-						label="Bookmarked"
+						label="Favourite"
 					/>
 				</DialogContent>
 				<DialogActions>
-					<Button onClick={handleClose}>Cancel</Button>
-					<Button disabled={invalid} onClick={handleSubmit}>
-						Edit Link
+					<Button onClick={handleClose} style={{ marginRight: 20 }}>
+						Cancel
+					</Button>
+					<Button
+						disabled={invalid}
+						onClick={handleSubmit}
+						variant="contained"
+						color="success">
+						Save
 					</Button>
 				</DialogActions>
 			</Dialog>

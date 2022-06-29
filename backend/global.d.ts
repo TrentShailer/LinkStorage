@@ -1,26 +1,9 @@
-interface CAuthInfo {
-	aud: string;
-	iss: string;
-	iat: number;
-	nbf: number;
-	exp: number;
-	aio: string;
-	azp: string;
-	azpacr: string;
-	idp: string;
-	name: string;
-	oid: string;
-	preferred_name: string;
-	rh: string;
-	scp: string;
-	sub: string;
-	tid: string;
-	uti: string;
-	ver: string;
-}
+import { Session } from "express-session";
+import { User } from "./utils/types";
 
-declare namespace Express {
-	interface Request {
-		authInfo?: CAuthInfo | undefined;
+declare module "express-session" {
+	interface Session {
+		authenticated?: boolean;
+		user_info?: User;
 	}
 }
