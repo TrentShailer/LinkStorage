@@ -12,7 +12,7 @@ import {
 	Typography,
 } from "@mui/material";
 import { StarOutline, Star, Edit, Delete, MoreVert, ContentCopy } from "@mui/icons-material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "../utils/types";
 import { VAlign } from "./VAlign";
 import { AllAlign } from "./AllAlign";
@@ -31,7 +31,39 @@ export default function LinkItem({ link, ManualRefresh, StartEditingLink }: Link
 	const [showSuccess, setShowSuccess] = useState(false);
 	const [showError, setShowError] = useState(false);
 
+	const [shiftOn, setShiftOn] = useState(false);
+
 	const { enqueueSnackbar } = useSnackbar();
+
+	const downHandler = (e: KeyboardEvent) => {
+		e.preventDefault();
+		if (e.key === "Control") {
+			setShiftOn(true);
+		}
+	};
+
+	const upHandler = (e: KeyboardEvent) => {
+		e.preventDefault();
+		if (e.key === "Control") {
+			setShiftOn(false);
+		}
+	};
+
+	useEffect(() => {
+		document.addEventListener("keydown", downHandler);
+
+		return () => {
+			document.removeEventListener("keydown", downHandler);
+		};
+	}, []);
+
+	useEffect(() => {
+		document.addEventListener("keyup", upHandler);
+
+		return () => {
+			document.removeEventListener("keyup", upHandler);
+		};
+	}, []);
 
 	const handleFavouriteChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		setFavourited(event.target.checked);
@@ -227,18 +259,22 @@ export default function LinkItem({ link, ManualRefresh, StartEditingLink }: Link
 								</ListItemIcon>
 								<ListItemText>Copy Link</ListItemText>
 							</MenuItem>
-							<MenuItem onClick={handleEdit}>
-								<ListItemIcon>
-									<Edit fontSize="small" />
-								</ListItemIcon>
-								<ListItemText>Edit</ListItemText>
-							</MenuItem>
-							<MenuItem onClick={handleDelete}>
-								<ListItemIcon>
-									<Delete fontSize="small" />
-								</ListItemIcon>
-								<ListItemText>Delete</ListItemText>
-							</MenuItem>
+							{shiftOn ? (
+								<>
+									<MenuItem onClick={handleEdit}>
+										<ListItemIcon>
+											<Edit fontSize="small" />
+										</ListItemIcon>
+										<ListItemText>Edit</ListItemText>
+									</MenuItem>
+									<MenuItem onClick={handleDelete}>
+										<ListItemIcon>
+											<Delete fontSize="small" />
+										</ListItemIcon>
+										<ListItemText>Delete</ListItemText>
+									</MenuItem>
+								</>
+							) : null}
 						</Menu>
 					</AllAlign>
 				</Grid>
