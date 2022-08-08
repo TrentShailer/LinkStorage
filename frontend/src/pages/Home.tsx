@@ -187,7 +187,7 @@ export default function Home() {
 
 	return (
 		<div>
-			<Container style={{ marginTop: 40 }}>
+			<Container sx={{ paddingLeft: [0], paddingRight: [0] }} style={{ marginTop: 40 }}>
 				<Grid container spacing={0} style={{ marginBottom: 10 }}>
 					<Grid item xs={5} md={4}>
 						<Button
