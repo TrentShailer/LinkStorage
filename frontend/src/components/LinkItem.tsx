@@ -185,8 +185,8 @@ export default function LinkItem({ link, ManualRefresh, StartEditingLink }: Link
 					className="LinkItemColumn"
 					alignItems="center"
 					item
-					pl={3}
-					pr={3}
+					pl={2}
+					pr={2}
 					xs={7}
 					md={4}>
 					<VAlign>
