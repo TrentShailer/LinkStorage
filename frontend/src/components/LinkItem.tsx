@@ -36,14 +36,12 @@ export default function LinkItem({ link, ManualRefresh, StartEditingLink }: Link
 	const { enqueueSnackbar } = useSnackbar();
 
 	const downHandler = (e: KeyboardEvent) => {
-		e.preventDefault();
 		if (e.key === "Control") {
 			setShiftOn(true);
 		}
 	};
 
 	const upHandler = (e: KeyboardEvent) => {
-		e.preventDefault();
 		if (e.key === "Control") {
 			setShiftOn(false);
 		}
