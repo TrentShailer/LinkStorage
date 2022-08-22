@@ -60,6 +60,6 @@ app.use(RoutesRoute);
 app.use(AccountRoute);
 app.use(LinksRoute);
 
-app.listen(2006, () => {
-	console.log("Listening on port 2006");
+app.listen(8080, () => {
+	console.log("Listening on port 8080");
 });

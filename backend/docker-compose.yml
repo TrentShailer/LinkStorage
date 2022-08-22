@@ -1,0 +1,21 @@
+services:
+  server:
+    image: trentshailer/link-storage:1.0.2
+    env_file:
+      - ./.env
+    ports:
+      - 4003:8080
+    depends_on:
+      - database
+    restart: always
+  database:
+    image: postgres:13-alpine
+    env_file:
+      - ./.env
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres-data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  postgres-data:
